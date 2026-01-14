@@ -1,0 +1,15 @@
+.light-controller {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 20px;
+}
+
+.light-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
