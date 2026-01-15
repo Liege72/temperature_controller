@@ -1,5 +1,9 @@
+"use client";
+
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import Switch from "./third-party/Switch";
+import Slider from "./third-party/Slider";
+
 import "../assets/styles/LightController.css";
 
 export default function LightController() {
@@ -13,6 +17,7 @@ export default function LightController() {
                     </div>
                     <Switch />
                 </div>
+                <Slider />
             </div>
         </>
     );
