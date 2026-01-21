@@ -9,12 +9,12 @@ interface ThickSliderProps {
     onChange?: (value: number) => void;
 }
 
-export default function ThickSlider({ defaultValue = 100, onChange }: ThickSliderProps) {
+export default function ThickSlider({ defaultValue = 70, onChange }: ThickSliderProps) {
     const [value, setValue] = useState<number>(defaultValue);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const sliderRef = useRef<HTMLDivElement>(null);
 
-    const updateValue = (clientX: number) => {
+    const updateValue = (clientX: number, fireCallback: boolean = false) => {
         const slider = sliderRef.current;
         if (!slider) return;
 
@@ -23,22 +23,28 @@ export default function ThickSlider({ defaultValue = 100, onChange }: ThickSlide
         const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
         const newValue = Math.round(percentage);
         setValue(newValue);
-        onChange?.(newValue);
+        if (fireCallback) {
+            onChange?.(newValue);
+        }
     };
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         setIsDragging(true);
-        updateValue(e.clientX);
+        updateValue(e.clientX, false);
     };
 
     const handleMouseMove = useCallback((e: MouseEvent) => {
-        updateValue(e.clientX);
+        updateValue(e.clientX, false);
     }, []);
 
     const handleMouseUp = useCallback(() => {
         setIsDragging(false);
-    }, []);
+        const slider = sliderRef.current;
+        if (slider) {
+            onChange?.(value);
+        }
+    }, [value, onChange]);
 
     useEffect(() => {
         if (isDragging) {
@@ -52,7 +58,7 @@ export default function ThickSlider({ defaultValue = 100, onChange }: ThickSlide
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="slider" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div
                 ref={sliderRef}
                 style={{

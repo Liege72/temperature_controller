@@ -2,11 +2,19 @@
 
 import { useState } from "react";
 
-export default function Switch() {
-    const [isChecked, setIsChecked] = useState(false);
+interface SwitchProps {
+    isLightOn: boolean;
+    onToggle?: (checked: boolean) => void;
+}
+
+export default function Switch({ isLightOn, onToggle }: SwitchProps) {
+    const [isChecked, setIsChecked] = useState(isLightOn);
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
+        if (onToggle) {
+            onToggle(!isChecked);
+        }
     };
 
     return (
