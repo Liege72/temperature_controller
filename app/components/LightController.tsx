@@ -73,10 +73,14 @@ export default function LightController() {
                         }}
                     />
                 ) : (
-                    <span>...</span>
+                    <Switch isLightOn={false} />
                 )}
             </div>
-            {lightLevel >= 0 && <Slider defaultValue={lightLevel} onChange={handleSliderChange} />}
+            {lightLevel >= 0 ? (
+                <Slider defaultValue={lightLevel} onChange={handleSliderChange} />
+            ) : (
+                <Slider defaultValue={0} />
+            )}
         </div>
     );
 }
