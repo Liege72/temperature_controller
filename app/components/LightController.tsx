@@ -8,15 +8,20 @@ import "../assets/styles/LightController.css";
 import { useEffect, useState } from "react";
 
 export default function LightController() {
-    const [isLightOn, setIsLightOn] = useState<undefined | boolean>(undefined);
+    // const [isLightOn, setIsLightOn] = useState<undefined | boolean>(undefined);
     const [lightLevel, setLightLevel] = useState<number>(-1);
+
+    console.log("Level?", lightLevel);
 
     const fetchLightStatus = async () => {
         const response = await fetch("/api/light", { method: "GET" });
         if (response.ok) {
             const data = await response.json();
-            setIsLightOn(data.status === "on");
-            setLightLevel(data.switchLevel);
+            if (data.status == "on") {
+                setLightLevel(data.switchLevel);
+            } else {
+                setLightLevel(0);
+            }
         } else {
             console.error("Failed to fetch light status");
         }
@@ -25,22 +30,6 @@ export default function LightController() {
     useEffect(() => {
         fetchLightStatus();
     }, []);
-
-    const switchLight = async () => {
-        const response = await fetch("/api/light", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ command: isLightOn ? "off" : "on" }),
-        });
-
-        if (!response.ok) {
-            console.error("Failed to toggle light");
-            return;
-        } else {
-            console.log("Light toggled successfully");
-            setIsLightOn(!isLightOn);
-        }
-    };
 
     const handleSliderChange = async (value: number) => {
         const response = await fetch("/api/light", {
@@ -56,6 +45,7 @@ export default function LightController() {
             console.log("Light level set successfully");
             setLightLevel(value);
         }
+        4;
     };
 
     return (
@@ -65,21 +55,21 @@ export default function LightController() {
                     <LightbulbIcon style={{ fontSize: 40, color: "white" }} />
                     <span style={{ fontSize: "24px", fontWeight: "600" }}>Lights</span>
                 </div>
-                {isLightOn !== undefined ? (
+                {lightLevel !== undefined ? (
                     <Switch
-                        isLightOn={isLightOn}
+                        isLightOn={lightLevel !== 0}
                         onToggle={() => {
-                            switchLight();
+                            handleSliderChange(lightLevel > 0 ? 0 : 100);
                         }}
                     />
                 ) : (
-                    <Switch isLightOn={false} />
+                    <span>...</span>
                 )}
             </div>
             {lightLevel >= 0 ? (
-                <Slider defaultValue={lightLevel} onChange={handleSliderChange} />
+                <Slider value={lightLevel} onChange={handleSliderChange} />
             ) : (
-                <Slider defaultValue={0} />
+                <span>...</span>
             )}
         </div>
     );

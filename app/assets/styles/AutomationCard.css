@@ -2,42 +2,122 @@
     background-color: #2a2a2a;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 20px;
     border-radius: 20px;
     align-items: flex-start;
-    justify-content: center;
     color: white;
-    font-size: 16px;
     font-weight: 500;
+    font-size: 18px;
     gap: 15px;
+}
+
+.automation-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.MuiButtonBase-root {
+    font-family: "Inter", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+}
+
+/* inactive tab selection */
+.mui-hmk518-MuiButtonBase-root-MuiTab-root {
+    color: #5b5b5b !important;
+    border-bottom: #5b5b5b 3px solid !important;
+}
+
+/* active tab selection */
+.Mui-selected {
+    color: #3a8ef6 !important;
+}
+
+.MuiTabs-indicator {
+    background-color: #3a8ef6 !important;
+    border-bottom: #3a8ef6 3px solid !important;
+}
+
+.automation-card-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 15px;
+}
+
+.automation-card-child.collapsed {
+    display: none;
+}
+
+[id^="expand-icon-container"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tabs-container {
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .set-time {
     display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.duration {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.duration-selection {
+    display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 10px;
 }
 
 .set-time input,
-.am-pm-toggle {
+.duration-selection input,
+.duration-selection select {
     font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 18px;
     color: white;
     background-color: #151515;
-    height: 60px;
     padding: 10px;
     border-radius: 10px;
     border: none;
+    box-sizing: content-box;
+    height: 25px;
+    -webkit-appearance: none;
 }
 
-.am-pm-toggle {
-    width: 60px;
+.duration-selection input {
+    width: 40px;
 }
 
-.am-pm-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.set-time input {
+    width: 100px;
+}
+
+.save-button {
+    background-color: #3a8ef6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
     cursor: pointer;
 }

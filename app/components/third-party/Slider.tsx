@@ -5,12 +5,11 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 
 interface ThickSliderProps {
-    defaultValue?: number;
+    value: number;
     onChange?: (value: number) => void;
 }
 
-export default function ThickSlider({ defaultValue = 70, onChange }: ThickSliderProps) {
-    const [value, setValue] = useState<number>(defaultValue);
+export default function ThickSlider({ value, onChange }: ThickSliderProps) {
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +21,6 @@ export default function ThickSlider({ defaultValue = 70, onChange }: ThickSlider
         const x = clientX - rect.left;
         const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
         const newValue = Math.round(percentage);
-        setValue(newValue);
         if (fireCallback) {
             onChange?.(newValue);
         }

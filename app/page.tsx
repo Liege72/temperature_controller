@@ -17,6 +17,7 @@ export default function Home() {
                 <div style={{ height: "10px" }}></div>
                 <span className="section-title">AUTOMATIONS</span>
                 <AutomationCard control={AutomationControl.HEATER} />
+                <AutomationCard control={AutomationControl.FAN} />
             </main>
         </>
     );

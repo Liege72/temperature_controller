@@ -8,7 +8,7 @@ export async function GET(request: Request) {
                     Authorization: "Bearer " + process.env.SMARTTHINGS_API_KEY,
                     "Content-Type": "application/json",
                 },
-            }
+            },
         ).then((res) => res.json());
 
         let switchLevelValue = response.components.main.switchLevel.level.value;
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
                 status: response.components.main.switch.switch.value,
                 switchLevel: switchLevelValue,
             }),
-            { status: 200 }
+            { status: 200 },
         );
     } catch {
         return new Response("Internal Server Error", { status: 500 });
@@ -30,25 +30,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        let command: string = "";
         let switchLevel: number = -1;
         const body = await request.json();
-        if (body.command === undefined && body.switchLevel === undefined) {
-            return new Response("Invalid command", { status: 400 });
-        }
-        if (body.command === "off" || body.command === "on") {
-            command = body.command;
-            switchLevel = command === "on" ? 100 : 0;
-        }
         if (body.switchLevel !== undefined) {
             if (body.switchLevel < 0 || body.switchLevel > 100) {
                 return new Response("Invalid switch level", { status: 400 });
             }
-            if (body.switchLevel == 0) {
-                command = "off";
-            }
             switchLevel = body.switchLevel;
-            command = "on";
+        } else {
+            return new Response("Invalid switch level", { status: 400 });
         }
 
         const response = await fetch(
@@ -64,20 +54,19 @@ export async function POST(request: Request) {
                         {
                             component: "main",
                             capability: "switch",
-                            command: command,
+                            command: switchLevel > 0 ? "on" : "off",
+                            arguments: [],
                         },
                         {
                             component: "main",
                             capability: "switchLevel",
                             command: "setLevel",
-                            arguments: [body.switchLevel],
+                            arguments: [switchLevel],
                         },
                     ],
                 }),
-            }
+            },
         ).then((res) => res.json());
-
-        console.log("Light control response:", response);
 
         return new Response(JSON.stringify(response), { status: 200 });
     } catch {
