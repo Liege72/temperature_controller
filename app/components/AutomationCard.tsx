@@ -8,11 +8,9 @@ import ArrowIcon from "../../public/arrow.svg";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import { MachineMemory } from "../models/Automation";
 
-export enum AutomationControl {
-    HEATER = "Heater",
-    FAN = "Fan",
-}
+export type AutomationControl = "heater" | "fan";
 
 export interface AutomationCardProps {
     control: AutomationControl;
@@ -64,10 +62,45 @@ export default function AutomationCard({ control }: AutomationCardProps) {
         }
     };
 
+    const onFormSubmit = async () => {
+        const type = value === 0 ? "until" : "for";
+        let endTime = "";
+
+        if (type === "until") {
+            const timeInput = (document.querySelector(".set-time input") as HTMLInputElement).value;
+            endTime = timeInput;
+        } else {
+            const durationInput = parseInt((document.querySelector(".duration input") as HTMLInputElement).value);
+            const durationUnit = (document.querySelector(".duration select") as HTMLSelectElement).value;
+            const now = new Date();
+            if (durationUnit === "minutes") {
+                now.setMinutes(now.getMinutes() + durationInput);
+            } else {
+                now.setHours(now.getHours() + durationInput);
+            }
+            endTime = now.toTimeString();
+        }
+
+        const object = new MachineMemory(type, control, endTime);
+        const response = await fetch("/api/automation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                memory: object,
+            }),
+        });
+
+        if (response.ok) {
+            console.log("Automation saved successfully");
+        } else {
+            console.error("Failed to save automation");
+        }
+    };
+
     return (
         <div className="automation-card">
             <div className="automation-card-header">
-                <span>Keep {control} on Until</span>
+                <span>Keep {control} on</span>
                 <div id={`expand-icon-container-${control}`}>
                     <Image
                         className={`expand-icon ${isExpanded ? "expanded" : ""}`}
@@ -90,13 +123,13 @@ export default function AutomationCard({ control }: AutomationCardProps) {
                     </Tabs>
                 </div>
                 <CustomTabPanel value={value} index={0}>
-                    <form className="set-time">
+                    <form className="set-time" onSubmit={onFormSubmit}>
                         <input type="time" defaultValue="01:00" />
                         <button className="save-button">Save</button>
                     </form>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <form className="duration">
+                    <form className="duration" onSubmit={onFormSubmit}>
                         <div className="duration-selection">
                             <input type="text" inputMode="numeric" pattern="[0-9]*" />
                             <select>
