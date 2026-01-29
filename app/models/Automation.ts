@@ -1,13 +1,14 @@
 import crypto from "crypto";
+import { AutomationControl } from "../components/AutomationCard";
 
 export class MachineMemory {
     key: string;
     type: "until" | "for";
-    machine: "heater" | "fan";
+    machine: AutomationControl;
     endTime: string;
 
-    constructor(type: "until" | "for", machine: "heater" | "fan", endTime: string) {
-        this.key = crypto.randomUUID();
+    constructor(type: "until" | "for", machine: AutomationControl, endTime: string) {
+        this.key = crypto.randomBytes(16).toString("hex");
         this.type = type;
         this.machine = machine;
         this.endTime = endTime;

@@ -10,7 +10,10 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { MachineMemory } from "../models/Automation";
 
-export type AutomationControl = "heater" | "fan";
+export enum AutomationControl {
+    HEATER = "Heater",
+    FAN = "Fan",
+}
 
 export interface AutomationCardProps {
     control: AutomationControl;
@@ -62,7 +65,7 @@ export default function AutomationCard({ control }: AutomationCardProps) {
         }
     };
 
-    const onFormSubmit = async () => {
+    const onButtonClick = async () => {
         const type = value === 0 ? "until" : "for";
         let endTime = "";
 
@@ -70,8 +73,11 @@ export default function AutomationCard({ control }: AutomationCardProps) {
             const timeInput = (document.querySelector(".set-time input") as HTMLInputElement).value;
             endTime = timeInput;
         } else {
-            const durationInput = parseInt((document.querySelector(".duration input") as HTMLInputElement).value);
-            const durationUnit = (document.querySelector(".duration select") as HTMLSelectElement).value;
+            const durationInput = parseInt(
+                (document.querySelector(".duration input") as HTMLInputElement).value,
+            );
+            const durationUnit = (document.querySelector(".duration select") as HTMLSelectElement)
+                .value;
             const now = new Date();
             if (durationUnit === "minutes") {
                 now.setMinutes(now.getMinutes() + durationInput);
@@ -80,6 +86,8 @@ export default function AutomationCard({ control }: AutomationCardProps) {
             }
             endTime = now.toTimeString();
         }
+
+        console.log(`Submitting automation: type=${type}, control=${control}, endTime=${endTime}`);
 
         const object = new MachineMemory(type, control, endTime);
         const response = await fetch("/api/automation", {
@@ -123,13 +131,20 @@ export default function AutomationCard({ control }: AutomationCardProps) {
                     </Tabs>
                 </div>
                 <CustomTabPanel value={value} index={0}>
-                    <form className="set-time" onSubmit={onFormSubmit}>
+                    <div className="set-time">
                         <input type="time" defaultValue="01:00" />
-                        <button className="save-button">Save</button>
-                    </form>
+                        <button
+                            className="save-button"
+                            onClick={() => {
+                                onButtonClick();
+                            }}
+                        >
+                            Save
+                        </button>
+                    </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <form className="duration" onSubmit={onFormSubmit}>
+                    <div className="duration">
                         <div className="duration-selection">
                             <input type="text" inputMode="numeric" pattern="[0-9]*" />
                             <select>
@@ -137,8 +152,10 @@ export default function AutomationCard({ control }: AutomationCardProps) {
                                 <option value="hours">Hrs</option>
                             </select>
                         </div>
-                        <button className="save-button">Save</button>
-                    </form>
+                        <button className="save-button" onClick={() => onButtonClick}>
+                            Save
+                        </button>
+                    </div>
                 </CustomTabPanel>
             </div>
         </div>

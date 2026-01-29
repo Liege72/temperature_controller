@@ -11,8 +11,6 @@ export default function LightController() {
     // const [isLightOn, setIsLightOn] = useState<undefined | boolean>(undefined);
     const [lightLevel, setLightLevel] = useState<number>(-1);
 
-    console.log("Level?", lightLevel);
-
     const fetchLightStatus = async () => {
         const response = await fetch("/api/light", { method: "GET" });
         if (response.ok) {

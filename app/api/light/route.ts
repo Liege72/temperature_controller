@@ -1,7 +1,7 @@
 export async function GET(request: Request) {
     try {
         const response = await fetch(
-            "https://api.smartthings.com/v1/devices/44c853c2-c5b4-4d0f-b942-acc75ba96dcf/status",
+            `https://api.smartthings.com/v1/devices/${process.env.LAMP_ID}/status`,
             {
                 method: "GET",
                 headers: {
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         }
 
         const response = await fetch(
-            "https://api.smartthings.com/v1/devices/44c853c2-c5b4-4d0f-b942-acc75ba96dcf/commands",
+            `https://api.smartthings.com/v1/devices/${process.env.LAMP_ID}/commands`,
             {
                 method: "POST",
                 headers: {

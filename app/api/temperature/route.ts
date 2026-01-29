@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export async function GET(request: Request) {
     try {
         const response = await fetch("https://openapi.api.govee.com/router/api/v1/device/state", {
@@ -7,10 +9,10 @@ export async function GET(request: Request) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                requestId: "5511c153-1bb7-47f7-bb63-3c6b5c4e1eac",
+                requestId: crypto.randomUUID(),
                 payload: {
                     sku: "H5103",
-                    device: "0E:3E:DB:C4:02:C6:3A:8C",
+                    device: process.env.GOVEE_DEVICE_ID || "",
                 },
             }),
         }).then((res) => res.json());
